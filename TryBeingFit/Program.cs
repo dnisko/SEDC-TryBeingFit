@@ -1,10 +1,17 @@
-﻿namespace TryBeingFit
+﻿using DataAccess;
+using Services.Implementations;
+using Services.Interfaces;
+
+namespace TryBeingFit
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            IUIService uiService = new UIService();
+            Storage storage = new Storage();
+
+            uiService.Login();
         }
     }
 }

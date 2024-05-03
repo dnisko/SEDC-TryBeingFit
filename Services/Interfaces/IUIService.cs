@@ -2,5 +2,7 @@
 {
     public interface IUIService
     {
+        void Login();
+        void ShowMenu();
     }
 }

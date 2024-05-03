@@ -1,17 +1,54 @@
-﻿using Models.Enums;
+﻿using Models;
+using Models.Enums;
 using Models.TrainingModel;
 using Models.UserModel;
+using Newtonsoft.Json;
 
 namespace DataAccess
 {
-    internal class Storage
+    public class Storage
     {
-        public static StorageSet<User> Users { get; set; } = new StorageSet<User>()
-        {
-            Items = new List<User>() { new User(1, "dino", "nikolovski", "dinko", "asde", AccountTypeEnum.StandardUser)}
-        };
+        public StorageSet<User> Users { get; set; }
+        public StorageSet<Trainer> Trainers { get; set; }
+        public StorageSet<Training> Trainings { get; set; }
+        public List<BaseEntity> BaseEntities { get; set; }
+        //public static StorageSet<User> Users { get; set; } = new StorageSet<User>()
+        //{
+        //    Items = new List<User>() { new User(1, "dino", "nikolovski", "dinko", "asde", AccountTypeEnum.StandardUser)}
+        //};
 
-        public static StorageSet<Trainer> Trainers { get; set; } = new StorageSet<Trainer>();
-        public static StorageSet<Training> Trainings { get; set; } = new StorageSet<Training>();
+        //public static StorageSet<Trainer> Trainers { get; set; } = new StorageSet<Trainer>();
+        //public static StorageSet<Training> Trainings { get; set; } = new StorageSet<Training>();
+        public Storage()
+        {
+            Users = new StorageSet<User>();
+            Trainers = new StorageSet<Trainer>();
+            Trainings = new StorageSet<Training>();
+            BaseEntities = new List<BaseEntity>();
+
+            // Add all users to BaseEntities
+            foreach (var user in Users.GetAll())
+            {
+                BaseEntities.Add(user);
+            }
+
+            // Add all trainers to BaseEntities
+            foreach (var trainer in Trainers.GetAll())
+            {
+                BaseEntities.Add(trainer);
+            }
+
+            if (!Users.GetAll().Any())
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+
+                Users.Add(new User(0, "Dino", "Nikolovski", "dino" ,"12345.dino", AccountTypeEnum.StandardUser));
+                
+                string json = JsonConvert.SerializeObject(Users.GetAll());
+
+                // Deserialize JSON back to a collection of User objects
+                var deserializedUsers = JsonConvert.DeserializeObject<List<User>>(json);
+            }
+        }
     }
 }

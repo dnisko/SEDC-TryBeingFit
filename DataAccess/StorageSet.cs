@@ -1,21 +1,23 @@
 ﻿using Models;
+using Newtonsoft.Json;
 
 namespace DataAccess
 {
     public class StorageSet<T> : IStorageSet<T> where T : BaseEntity
     {
-        public List<T> Items { get; set; } = new List<T>();
+        //public List<T> Items { get; set; } = new List<T>();
 
         public void Add(T entity)
         {
+            var items = ReadItems();
             if(entity.Id != 0)
             {
                 throw new Exception("For adding new item, the Id needs to be set to 0");
             }
 
-            if (Items.Any())
+            if (items.Any())
             {
-                int max = Items.Max(x => x.Id);
+                int max = items.Max(x => x.Id);
                 entity.Id = max + 1;
             }
             else
@@ -23,17 +25,19 @@ namespace DataAccess
                 entity.Id = 1;
             }
 
-            Items.Add(entity);
+            items.Add(entity);
+            SaveItems(items);
         }
 
         public List<T> GetAll()
         {
-            return Items;
+            return ReadItems();
         }
 
         public T GetById(int id)
         {
-            T item = Items.FirstOrDefault(x => x.Id == id);
+            var items = ReadItems();
+            T item = items.FirstOrDefault(x => x.Id == id);
 
             if(item == null)
             {
@@ -45,16 +49,18 @@ namespace DataAccess
 
         public void Update(T entity)
         {
-            T item = Items.FirstOrDefault(x => x.Id == entity.Id);
+            var items = ReadItems();
+            T item = items.FirstOrDefault(x => x.Id == entity.Id);
 
             if (item == null)
             {
                 throw new KeyNotFoundException($"Entity with Id = {entity.Id} does not exit");
             }
 
-            int index = Items.IndexOf(item);
+            int index = items.IndexOf(item);
 
-            Items[index] = entity;
+            items[index] = entity;
+            SaveItems(items);
         }
 
         public void Delete(T entity)
@@ -64,14 +70,86 @@ namespace DataAccess
 
         public void Delete(int id)
         {
-            T item = Items.FirstOrDefault(x => x.Id == id);
+            var items = ReadItems();
+            T item = items.FirstOrDefault(x => x.Id == id);
 
             if (item == null)
             {
                 throw new KeyNotFoundException($"Entity with Id = {id} does not exit");
             }
 
-            Items.Remove(item);
+            items.Remove(item);
+            SaveItems(items);
+        }
+
+        private List<T> ReadItems()
+        {
+            var new1 = Environment.CurrentDirectory;
+            string folderPath = @"..\..\..\Data";
+            string fullPath = Path.GetFullPath(folderPath);
+            string fileName = $"{typeof(T).Name}s.json";
+            string filePath = $@"{folderPath}\{fileName}";
+            var result = new List<T>();
+
+            if (!Directory.Exists(folderPath))
+            {
+                
+                return result;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                return result;
+            }
+
+            try
+            {
+                using (var sr = new StreamReader(filePath))
+                {
+                    string content = sr.ReadToEnd();
+
+                    JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                    result = JsonConvert.DeserializeObject<List<T>>(content, settings) ?? new List<T>(); //null-coalescing (if the left side is null, then the right side is assign to the variable)
+
+                    //result = JsonConvert.DeserializeObject<List<T>>(content) == null 
+                    //    ? new List<T>() 
+                    //    : JsonConvert.DeserializeObject<List<T>>(content);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //Log the exception
+                return result;
+            }
+
+            return result;
+        }
+
+        private void SaveItems(List<T> items)
+        {
+            string folderPath = @"..\..\..\Data";
+            string fileName = $"{typeof(T).Name}s.json";
+            string filePath = $@"{folderPath}\{fileName}";
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+            }
+
+            JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            string content = JsonConvert.SerializeObject(items, settings);
+
+            using(var sw = new StreamWriter(filePath))
+            {
+                sw.WriteLine(content);
+            }
         }
     }
 }

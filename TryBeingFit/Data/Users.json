@@ -1,0 +1,14 @@
+{
+  "$type": "System.Collections.Generic.List`1[[Models.UserModel.User, Models]], System.Private.CoreLib",
+  "$values": [
+    {
+      "$type": "Models.UserModel.User, Models",
+      "AccountType": 1,
+      "FirstName": "Dino",
+      "LastName": "Nikolovski",
+      "Username": "dino",
+      "Password": "12345.dino",
+      "Id": 1
+    }
+  ]
+}

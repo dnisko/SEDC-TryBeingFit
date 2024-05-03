@@ -1,6 +1,6 @@
 ﻿namespace Services.Interfaces
 {
-    public interface IUserService
+    public interface ITrainingService
     {
     }
 }

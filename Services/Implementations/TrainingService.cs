@@ -2,7 +2,8 @@
 
 namespace Services.Implementations
 {
-    public class UserService : IUserService
+    public class TrainingService : ITrainingService
     {
+
     }
 }
