@@ -37,14 +37,24 @@ namespace Services.Implementations
             throw new NotImplementedException();
         }
         //see stats??
-        public void Account()
+        public void Account(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Upgrade(int id)
+        public void Upgrade()//int id)
         {
-            CurrentSession.CurrentUser.AccountType = AccountTypeEnum.PremiumUser;
+            //var user = _storage.Users.GetById(id);
+            //OR
+            var user = _storage.Users.GetById(CurrentSession.CurrentUser.Id);
+            if (user.AccountType == AccountTypeEnum.PremiumUser)
+            {
+                throw new Exception("You are already a premium user");
+            }
+
+            user.AccountType = AccountTypeEnum.PremiumUser;
+            _storage.Users.Update(user);
+            CurrentSession.CurrentUser = user;
         }
     }
 }

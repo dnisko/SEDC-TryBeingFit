@@ -5,7 +5,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
-        private string Password { get; set; }
+        public string Password { get; set; }
 
         public Person(int id, string firstName, string lastName, string username, string password) : base(id)
         {

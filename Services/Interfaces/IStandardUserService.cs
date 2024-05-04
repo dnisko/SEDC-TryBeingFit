@@ -9,8 +9,8 @@
            
                      
          */
-        
-        void Upgrade(int id);
+
+        void Upgrade(); //int id);
 
     }
 }

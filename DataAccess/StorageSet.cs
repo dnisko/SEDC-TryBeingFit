@@ -109,7 +109,8 @@ namespace DataAccess
                     string content = sr.ReadToEnd();
 
                     JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-                    result = JsonConvert.DeserializeObject<List<T>>(content, settings) ?? new List<T>(); //null-coalescing (if the left side is null, then the right side is assign to the variable)
+                    result = JsonConvert.DeserializeObject<List<T>>(content, settings) ?? new List<T>();
+                    //null-coalescing (if the left side is null, then the right side is assign to the variable)
 
                     //result = JsonConvert.DeserializeObject<List<T>>(content) == null 
                     //    ? new List<T>() 

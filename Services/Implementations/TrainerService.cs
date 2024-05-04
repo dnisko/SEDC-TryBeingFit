@@ -29,22 +29,22 @@ namespace Services.Implementations
 
         public void LogIn(string username, string password)
         {
-            var loginUser = _storage.Users.GetAll().FirstOrDefault(x => x.Username == username);
+            var loginTrainer = _storage.Trainers.GetAll().FirstOrDefault(x => x.Username == username);
 
-            if (loginUser == null)
+            if (loginTrainer == null)
                 throw new Exception("Non existing user!");
 
-            if (!loginUser.CheckPassword(password))
+            if (!loginTrainer.CheckPassword(password))
             {
                 throw new Exception("Wrong password");
             }
 
-            CurrentSession.CurrentUser = loginUser;
+            CurrentSession.CurrentTrainer = loginTrainer;
         }
 
         public void LogOut()
         {
-            CurrentSession.CurrentUser = null;
+            CurrentSession.CurrentTrainer = null;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Services.Implementations
             throw new NotImplementedException();
         }
 
-        public void Account()
+        public void Account(int id)
         {
             throw new NotImplementedException();
         }

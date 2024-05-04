@@ -12,13 +12,7 @@ namespace DataAccess
         public StorageSet<Trainer> Trainers { get; set; }
         public StorageSet<Training> Trainings { get; set; }
         public List<BaseEntity> BaseEntities { get; set; }
-        //public static StorageSet<User> Users { get; set; } = new StorageSet<User>()
-        //{
-        //    Items = new List<User>() { new User(1, "dino", "nikolovski", "dinko", "asde", AccountTypeEnum.StandardUser)}
-        //};
 
-        //public static StorageSet<Trainer> Trainers { get; set; } = new StorageSet<Trainer>();
-        //public static StorageSet<Training> Trainings { get; set; } = new StorageSet<Training>();
         public Storage()
         {
             Users = new StorageSet<User>();
@@ -40,14 +34,19 @@ namespace DataAccess
 
             if (!Users.GetAll().Any())
             {
-                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                //JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
 
-                Users.Add(new User(0, "Dino", "Nikolovski", "dino" ,"12345.dino", AccountTypeEnum.StandardUser));
+                Users.Add(new User(0, "Dino", "Nikolovski", "dino" , "12345.dino", AccountTypeEnum.StandardUser));
                 
-                string json = JsonConvert.SerializeObject(Users.GetAll());
+                //string json = JsonConvert.SerializeObject(Users.GetAll());
 
                 // Deserialize JSON back to a collection of User objects
-                var deserializedUsers = JsonConvert.DeserializeObject<List<User>>(json);
+                //var deserializedUsers = JsonConvert.DeserializeObject<List<User>>(json);
+            }
+
+            if (!Trainers.GetAll().Any())
+            {
+                Trainers.Add(new Trainer(0, "Test", "TestLN", "test", "12345test", new List<User>(Users.GetAll())));
             }
         }
     }

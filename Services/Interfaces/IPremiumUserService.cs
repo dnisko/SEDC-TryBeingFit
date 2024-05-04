@@ -10,6 +10,6 @@
         void Login(string username, string password);
         void LogOut();
         void Train();
-        void Account();
+        void Account(int id);
     }
 }

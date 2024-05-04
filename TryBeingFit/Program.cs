@@ -12,6 +12,12 @@ namespace TryBeingFit
             Storage storage = new Storage();
 
             uiService.Login();
+            while (true)
+            {
+                uiService.ShowMenu();
+                var users = storage.Users.GetAll();
+                var trainers = storage.Trainers.GetAll();
+            }
         }
     }
 }
